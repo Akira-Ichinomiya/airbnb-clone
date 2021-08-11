@@ -39,9 +39,12 @@ DJANGO_APPS = [
     "django.contrib.staticfiles",
 ]
 
-THIRD_PARTY_APPS = ["django_countries"]
+THIRD_PARTY_APPS = [
+    "django_countries",
+    "install django-seed",
+]  # pipenv install을 하는 라이브러리들을 여기에 추가해준다.
 
-PROJECT_APPS = [
+PROJECT_APPS = [  # 우리가 만든 앱들
     "core.apps.CoreConfig",
     "users.apps.UsersConfig",
     "rooms.apps.RoomsConfig",
@@ -51,7 +54,7 @@ PROJECT_APPS = [
     "conversations.apps.ConversationsConfig",
 ]
 
-INSTALLED_APPS = DJANGO_APPS + PROJECT_APPS
+INSTALLED_APPS = DJANGO_APPS + PROJECT_APPS  # 모든 앱들
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
