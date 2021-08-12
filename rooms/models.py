@@ -73,7 +73,7 @@ class Room(core_models.TimeStampedModel):
 
     """Room Model Definition"""
 
-    name = models.CharField(max_length=144, blank=False, unique=True, default=None)
+    name = models.CharField(max_length=144, blank=False, default=None)
     description = models.TextField(blank=True)
     country = CountryField()
     city = models.CharField(max_length=80, blank=True)
@@ -106,6 +106,8 @@ class Room(core_models.TimeStampedModel):
     def total_rating(self):
         all_reviews = self.reviews.all()
         all_ratings = 0
-        for review in all_reviews:
-            all_ratings += review.rating_average()
-        return all_ratings / len(all_reviews)
+        if len(all_reviews) > 0:
+            for review in all_reviews:
+                all_ratings += review.rating_average()
+            return all_ratings / len(all_reviews)
+        return 0
