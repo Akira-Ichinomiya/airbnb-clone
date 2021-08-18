@@ -2,4 +2,24 @@
 {% block page_name %}
 Home
 {% endblock page_name %}
-{% block content %} {% endblock content %}
+{% block content %}
+
+    <h1>{{now}}</h1>
+
+    {% for room in rooms %}
+        <h1>{{room.name}} / ${{room.price}}</h1>
+    {% endfor %}
+
+    <h5>
+    {% if page_obj.has_previous %}
+        <a href="?page={{ page_obj.previous_page_number }}">Previous</a>
+    {% endif %}
+    {% for page_obj in page_obj.paginator.page_range %}
+        {{page}}
+    {% endfor %}
+    Page {{page_obj.number}} of {{page_obj.paginator.num_pages}}
+    {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}">Next</a>
+    {% endif %}
+    </h5>
+{% endblock content %}
