@@ -14,8 +14,8 @@ Home
     {% if page_obj.has_previous %}
         <a href="?page={{ page_obj.previous_page_number }}">Previous</a>
     {% endif %}
-    {% for page_obj in page_obj.paginator.page_range %}
-        {{page}}
+    {% for page in page_obj.paginator.page_range %}
+        <a href="?page={{page}}">{{page}}</a>
     {% endfor %}
     Page {{page_obj.number}} of {{page_obj.paginator.num_pages}}
     {% if page_obj.has_next %}
