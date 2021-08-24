@@ -1,3 +1,4 @@
+from . import models
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.shortcuts import redirect, render, reverse
@@ -46,4 +47,17 @@ class SignupView(FormView):
         user = authenticate(self.request, username=email, password=password)
         if user is not None:
             login(self.request, user)
+        user.verify_email()
         return super().form_valid(form)
+
+
+def complete_verification(request, key):
+    try:
+        user = models.User.objects.get(email_secret=key)
+        user.email_verified = True
+        user.save()
+        # to do: add success message
+        return redirect(reverse("core:home"))
+    except models.User.DoesNotExist:
+        # to do: add error meesage
+        return redirect(reverse("core:home"))
