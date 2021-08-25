@@ -3,6 +3,7 @@
 Sign Up
 {% endblock page_name %}
 {% block content %}
+    {% include "partials/social_login.html"%}
     <form method="post", action="{% url "users:signup" %}">
         {% csrf_token %}
         {{form.as_p}}

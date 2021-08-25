@@ -5,6 +5,8 @@ app_name = "users"
 
 urlpatterns = [
     path("login", views.LoginView.as_view(), name="login"),
+    path("login/github", views.github_login, name="github_login"),
+    path("login/github/callback", views.github_callback, name="github_callback"),
     path("logout", views.log_out, name="logout"),
     path("signup", views.SignupView.as_view(), name="signup"),
     path(
