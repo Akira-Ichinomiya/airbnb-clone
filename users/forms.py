@@ -1,5 +1,6 @@
 from django import forms
 from django.contrib.auth.models import User
+from django.contrib.auth.forms import UserCreationForm
 from . import models
 
 
@@ -21,40 +22,9 @@ class LoginForm(forms.Form):
             self.add_error("email", forms.ValidationError("User does not exist."))
 
 
-class SignupForm(forms.ModelForm):
+class SignupForm(UserCreationForm):
+    email = forms.EmailField(required=True)
+
     class Meta:
         model = models.User
-        fields = ["first_name", "last_name", "email"]  # clean검사를 알아서 해줌
-
-    # first_name = forms.CharField(max_length=50)
-    # last_name = forms.CharField(max_length=50)
-    # email = forms.EmailField()
-    password = forms.CharField(widget=forms.PasswordInput)
-    password_confirm = forms.CharField(
-        widget=forms.PasswordInput, label="Confirm Password"
-    )
-
-    # def clean_email(self):
-    #     email = self.cleaned_data.get("email")
-    #     try:
-    #         models.User.objects.get(email=email)
-    #         raise forms.ValidationError("Email already exists.")
-    #     except models.User.DoesNotExist:
-    #         return email
-
-    def clean_password_confirm(self):
-        password = self.cleaned_data.get("password")
-        password_confirm = self.cleaned_data.get("password_confirm")
-        # print(password)
-        # print(password_confirm)
-
-        if password_confirm != password:
-            raise forms.ValidationError("Passwords do not match.")
-        else:
-            return password
-
-    def save(self, *args, **kwargs):
-        user = super().save(commit=False)
-        user.username = self.cleaned_data.get("email")
-        user.set_password(self.cleaned_data.get("password"))
-        user.save()
+        fields = ("email", "username")
