@@ -6,9 +6,9 @@ class Command(BaseCommand):
 
     help = "가짜 amenity 생성함"
 
-    # def add_arguments(self, parser):
+    def add_arguments(self, parser):
 
-    #     parser.add_argument("--times", help="가짜 amenity 생성")
+        parser.add_argument("--times", help="가짜 amenity 생성")
 
     def handle(self, *args, **options):
         amenities = [
