@@ -58,7 +58,7 @@ class User(AbstractUser):
         choices=CURRENCY_CHOICES, max_length=3, blank=True, default=CURRENCY_USD
     )
     superhost = models.BooleanField(default=False)
-    email_verified = models.BooleanField(default=False)
+    email_verified = models.BooleanField(default=True)
     email_secret = models.CharField(max_length=20, default="", blank=True)
     login_method = models.CharField(
         max_length=50, choices=LOGIN_CHOICES, default=LOGIN_EMAIL
@@ -83,6 +83,9 @@ class User(AbstractUser):
             )
         self.save()
         return
+
+    def set_username(self):
+        self.username = self.email
 
     def __str__(self):
         return self.username

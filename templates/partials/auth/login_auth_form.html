@@ -1,0 +1,16 @@
+<form method="post", action="{% url "users:login" %}" class="w-full">
+    {% csrf_token %}
+    {% if form.non_field_errors %}
+        {% for error in form.non_field_errors %}
+            <span class="text-red-700 font-medium text-sm">{{error}}</span>
+        {% endfor %}
+    {% endif %}
+    {% if form.email.errors %}
+        {% for error in form.email.errors %}
+            <span class="text-red-700 font-medium text-sm">{{error}}</span>
+        {% endfor %}
+    {% endif %}
+    <div class="w-full">{{form.email}}</div>
+    <div class="w-full">{{form.password}}</div>
+    <button class="btn bg-red-500 text-white">Login</button>
+</form>

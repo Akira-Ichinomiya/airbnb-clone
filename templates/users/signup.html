@@ -3,10 +3,13 @@
 Sign Up
 {% endblock page_name %}
 {% block content %}
-    {% include "partials/social_login.html"%}
-    <form method="post", action="{% url "users:signup" %}">
-        {% csrf_token %}
-        {{form.as_p}}
-        <button>Sign Up</button>
-    </form>
+    <div class="container mx-auto lg:w-1/4 md:1/2 xl:2/5 my-10 flex-col flex items-center border p-6 border-gray-400">
+        {% include "partials/auth/social_login.html"%}
+        {% include "partials/auth/sign_auth_form.html" with form=form%}
+
+        <div class="mt-5 flex w-full justify-center">
+            <span class="mr-2">이미 아이디가 있으신가요?</span>
+            <a href="{% url "users:login" %}" class="font-bold">로그인</a>
+        </div>
+    </div>
 {% endblock content %}

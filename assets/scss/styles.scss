@@ -15,4 +15,22 @@
   }
 }
 
+.btn {
+  @apply w-full text-lg text-center rounded-sm py-5 font-bold;
+}
+
+input {
+  @apply w-full text-lg rounded-sm py-5 font-bold border border-gray-500 px-5 focus:outline-none focus:border-green-500 text-left;
+}
+
+form {
+  input {
+    @apply mb-3;
+  }
+  .has_error {
+    input {
+      @apply bg-red-200 border-gray-400;
+    }
+  }
+}
 @tailwind utilities;

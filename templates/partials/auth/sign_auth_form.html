@@ -1,0 +1,17 @@
+<form method="post", class="w-full">
+    {% csrf_token %}
+    {% if form.non_field_errors %}
+        {% for error in form.non_field_errors %}
+            <span class="text-red-700 font-medium text-sm">{{error}}</span>
+        {% endfor %}
+    {% endif %}
+    {% if form.email.errors %}
+        {% for error in form.email.errors %}
+            <span class="text-red-700 font-medium text-sm">{{error}}</span>
+        {% endfor %}
+    {% endif %}
+    <div class="w-full {% if form.email.errors%}has_error{% endif %}">{{form.email}}</div>
+    <div class="w-full {% if form.non_field_errors%}has_error{% endif %}">{{form.password1}}</div>
+    <div class="w-full {% if form.non_field_errors%}has_error{% endif %}">{{form.password2}}</div>
+    <button class="btn bg-red-500 text-white">Sign Up</button>
+</form>
