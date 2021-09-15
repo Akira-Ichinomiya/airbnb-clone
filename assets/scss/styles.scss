@@ -16,7 +16,11 @@
 }
 
 .btn {
-  @apply w-full text-lg text-center rounded-sm py-5 font-bold;
+  @apply w-full text-lg text-center rounded-sm py-5 font-light;
+}
+
+.btn-link {
+  @apply w-full text-lg text-center py-5 font-light text-white bg-red-500 rounded-lg;
 }
 
 input {
@@ -31,6 +35,41 @@ form {
     input {
       @apply bg-red-200 border-gray-400;
     }
+  }
+}
+
+@keyframes messageFadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(-50px);
+  }
+  5% {
+    opacity: 1;
+    transform: translateY(50px);
+  }
+  95% {
+    opacity: 1;
+    transform: translateY(50px);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-150px);
+  }
+}
+
+.message {
+  animation: messageFadeIn 3s ease-in-out forwards;
+  &.error {
+    @apply bg-red-600;
+  }
+  &.info {
+    @apply bg-blue-400;
+  }
+  &.success {
+    @apply bg-green-400;
+  }
+  &.warning {
+    @apply bg-yellow-400;
   }
 }
 @tailwind utilities;

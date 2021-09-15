@@ -3,8 +3,9 @@ import requests
 from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import redirect, render, reverse
 from django.urls import reverse_lazy
-from django.views.generic import FormView
+from django.views.generic import FormView, DetailView, UpdateView
 from django.core.files.base import ContentFile
+from django.contrib import messages
 from . import models, forms
 
 
@@ -26,6 +27,7 @@ class LoginView(FormView):
 
 def log_out(request):
     logout(request)
+    messages.info(request, "로그아웃 되었습니다.")
     return redirect(reverse("core:home"))
 
 
@@ -83,7 +85,7 @@ def github_callback(request):
             result_json = result.json()
             error = result_json.get("error", None)
             if error:
-                raise githubException()
+                raise githubException("Something is wrong.")
             else:
                 access_token = result_json.get("access_token")
                 api_request = requests.get(
@@ -98,8 +100,11 @@ def github_callback(request):
                     try:
                         user = models.User.objects.get(email=email)
                         if user.login_method != models.User.LOGIN_GITHUB:
-                            raise githubException()
+                            raise githubException(
+                                f"Please log in with: {user.login_method}"
+                            )
                         login(request, user)
+                        messages.success(request, "Welcome back!")
                     except models.User.DoesNotExist:
                         user = models.User.objects.create(
                             username=email,
@@ -118,10 +123,10 @@ def github_callback(request):
                 else:
                     raise githubException()
         else:
-            raise githubException()
-    except githubException:
+            raise githubException("Something is wrong on your code.")
+    except githubException as e:
         # 에러 메시지 보내기
-        print("이미 존재하는 이메일입니다. 깃허브로 로그인 하지마세요")
+        messages.error(request, e)
         return redirect(reverse("users:login"))
 
 
@@ -148,7 +153,7 @@ def kakao_callback(request):
         token_json = token_request.json()
         error = token_json.get("error", None)
         if error:
-            raise KakaoException()
+            raise KakaoException("Something is wrong.")
         access_token = token_json.get("access_token")
         profile_request = requests.get(
             f"https://kapi.kakao.com/v2/user/me?",
@@ -163,13 +168,12 @@ def kakao_callback(request):
         profile_image = account.get("profile").get("thumbnail_image_url")
 
         if not email:
-            print("이메일 없음.")
-            raise KakaoException()
+            raise KakaoException("이메일을 확인할 수 없습니다.")
 
         try:
             user = models.User.objects.get(email=email)
             if user.login_method != models.User.LOGIN_KAKAO:
-                raise KakaoException()
+                raise KakaoException(f"Please log in with: {user.login_method}")
             login(request, user)
         except models.User.DoesNotExist:
             user = models.User.objects.create(
@@ -190,6 +194,36 @@ def kakao_callback(request):
                 )
             # print("이게 살아있어?", user)
             login(request, user)
+            messages.success(request, f"Welcome back!")
             return redirect(reverse("core:home"))
-    except KakaoException:
+    except KakaoException as e:
+        messages.error(request, e)
         return redirect(reverse("users:login"))
+
+
+class UserProfileView(DetailView):
+
+    model = models.User
+    context_object_name = "user_obj"
+
+    # def get_context_data(self, **kwargs):
+    #     context = super().get_context_data(**kwargs)
+
+
+class UpdateUserView(UpdateView):
+
+    model = models.User
+    template_name = "users/update-profile.html"
+    fields = (
+        "first_name",
+        "last_name",
+        "avatar",
+        "gender",
+        "bio",
+        "birthdate",
+        "language",
+        "currency",
+    )
+
+    def get_object(self, queryset=None):
+        return self.request.user

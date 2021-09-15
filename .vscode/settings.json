@@ -4,7 +4,9 @@
   "python.linting.flake8Enabled": true,
   "python.linting.enabled": true,
   "python.formatting.provider": "black",
+  "editor.formatOnSave": true,
   "python.linting.flake8Args": ["--max-line-length=88"],
   "editor.fontSize": 13,
-  "tailwindCSS.emmetCompletions": true
+  "tailwindCSS.emmetCompletions": true,
+  "editor.defaultFormatter": "ms-python.python"
 }
