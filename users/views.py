@@ -1,19 +1,21 @@
 import os
 import requests
+from django.db.models import fields
 from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import redirect, render, reverse
 from django.urls import reverse_lazy
 from django.views.generic import FormView, DetailView, UpdateView
+from django.contrib.messages.views import SuccessMessageMixin
+from django.contrib.auth.views import PasswordChangeView
 from django.core.files.base import ContentFile
 from django.contrib import messages
-from . import models, forms
+from . import models, forms, mixins
 
 
-class LoginView(FormView):
+class LoginView(mixins.LoggedOutOnlyView, FormView):
 
     template_name = "users/login.html"
     form_class = forms.LoginForm
-    success_url = reverse_lazy("core:home")
 
     def form_valid(self, form):
         email = form.cleaned_data.get("email")
@@ -24,6 +26,13 @@ class LoginView(FormView):
             login(self.request, user)
         return super().form_valid(form)
 
+    def get_success_url(self):
+        next_arg = self.request.GET.get("next")
+        if next_arg:
+            return next_arg
+        else:
+            return reverse("core:home")
+
 
 def log_out(request):
     logout(request)
@@ -31,7 +40,7 @@ def log_out(request):
     return redirect(reverse("core:home"))
 
 
-class SignupView(FormView):
+class SignupView(mixins.LoggedOutOnlyView, FormView):
 
     template_name = "users/signup.html"
     form_class = forms.SignUpForm
@@ -210,20 +219,57 @@ class UserProfileView(DetailView):
     #     context = super().get_context_data(**kwargs)
 
 
-class UpdateUserView(UpdateView):
+class UpdateUserView(mixins.LoggedInOnlyView, SuccessMessageMixin, UpdateView):
 
     model = models.User
     template_name = "users/update-profile.html"
     fields = (
+        "email",
         "first_name",
         "last_name",
-        "avatar",
+        "birthdate",
         "gender",
         "bio",
-        "birthdate",
         "language",
         "currency",
     )
 
+    success_message = "업데이트 되었습니다."
+
     def get_object(self, queryset=None):
         return self.request.user
+
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class=form_class)
+        if self.request.user.login_method == "email":
+            form.fields["email"].widget.attrs = {"placeholder": "Email"}
+        else:
+            form.fields["email"].widget.attrs = {"class": "hidden"}
+        form.fields["first_name"].widget.attrs = {"placeholder": "First name"}
+        form.fields["last_name"].widget.attrs = {"placeholder": "Last name"}
+        form.fields["birthdate"].widget.attrs = {"placeholder": "Birthdate"}
+        form.fields["gender"].widget.attrs = {"placeholder": "Gender"}
+        form.fields["bio"].widget.attrs = {"placeholder": "Bio"}
+        form.fields["language"].widget.attrs = {"placeholder": "Language"}
+        form.fields["currency"].widget.attrs = {"placeholder": "Currency"}
+        return form
+
+
+class UpdatePasswordView(
+    mixins.LoggedInOnlyView, mixins.emailLoginOnlyView, PasswordChangeView
+):
+
+    template_name = "users/update-password.html"
+    success_message = "성공적으로 변경되었습니다."
+
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class=form_class)
+        form.fields["old_password"].widget.attrs = {"placeholder": "Old Password"}
+        form.fields["new_password1"].widget.attrs = {"placeholder": "New Password"}
+        form.fields["new_password2"].widget.attrs = {
+            "placeholder": "New Password Confirmation"
+        }
+        return form
+
+    def get_success_url(self):
+        return self.request.user.get_absolute_url()

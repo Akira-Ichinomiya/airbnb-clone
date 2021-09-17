@@ -23,8 +23,21 @@
   @apply w-full text-lg text-center py-5 font-light text-white bg-red-500 rounded-lg;
 }
 
-input {
-  @apply w-full text-lg rounded-sm py-5 font-bold border border-gray-500 px-5 focus:outline-none focus:border-green-500 text-left;
+input, textarea {
+  @apply w-full text-lg rounded-sm py-5 font-medium border border-gray-500 px-5 text-left;
+  &:focus{
+    @apply outline-none focus:border-green-500;
+  }
+}
+
+textarea {
+  resize: none;
+  height:100px;
+}
+select {
+  height: 50px;
+  font-size:10px;
+  @apply w-full text-lg rounded-sm py-2 font-light border border-gray-500 px-2 text-left mb-2;
 }
 
 form {
@@ -72,4 +85,5 @@ form {
     @apply bg-yellow-400;
   }
 }
+
 @tailwind utilities;

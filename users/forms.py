@@ -6,8 +6,10 @@ from . import models
 
 class LoginForm(forms.Form):
 
-    email = forms.EmailField(widget=forms.EmailInput(attrs={'placeholder': 'Email'}))
-    password = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': 'Password'}))
+    email = forms.EmailField(widget=forms.EmailInput(attrs={"placeholder": "Email"}))
+    password = forms.CharField(
+        widget=forms.PasswordInput(attrs={"placeholder": "Password"})
+    )
 
     def clean(self):
         email = self.cleaned_data.get("email")
@@ -49,4 +51,3 @@ class SignUpForm(UserCreationForm):
                 self.add_error("email", forms.ValidationError("같은 이메일이 이미 존재합니다."))
         except:
             pass
-
