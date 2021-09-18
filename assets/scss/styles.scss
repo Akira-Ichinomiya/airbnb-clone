@@ -86,4 +86,8 @@ form {
   }
 }
 
+.border-section {
+  @apply border-b border-gray-300 pb-10 mb-10;
+}
+
 @tailwind utilities;

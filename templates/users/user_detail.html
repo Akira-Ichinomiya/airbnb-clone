@@ -7,6 +7,16 @@
 <div class="h-75vh">
     <div class="container lg:w-5/12 md:w-1/2 xl:w-1/4 mx-auto my-10 flex flex-col items-center border p-6 border-gray-400">
         {% include "mixins/user_avatar.html" with user=user_obj%}
+    </div>
+    <div class="flex items-center">
+        <span class="font-medium text-3xl mt-3">
+            {{user.email}}
+        </span>
+        {% if user.superhost%}
+            <i class="fas fa-check-circle text-green-400 text-"></i>
+        {% endif %}
+    </div>
+        <span class="text-lg mb-5">{{user.bio}}</span>
     
         {% if user == user_obj%}
         <a href="{% url "users:update" %}" class="btn-link">Edit Profile</a>

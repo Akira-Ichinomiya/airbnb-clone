@@ -1,16 +1,7 @@
-<div class="h-20 w-20">
+<div class="{{h_and_w|default:'w-20 h-20'}}">
     {% if user.avatar %}
         <img src="{{user.avatar.url}}" class="rounded-full">
     {% else %}
         <img src="https://www.edmundsgovtech.com/wp-content/uploads/2020/01/default-picture_0_0.png" class="rounded-full">
     {% endif %}
 </div>
-<div class="flex items-center">
-    <span class="font-medium text-3xl mt-3">
-        {{user.email}}
-    </span>
-    {% if user.superhost%}
-        <i class="fas fa-check-circle text-green-400 text-"></i>
-    {% endif %}
-</div>
-    <span class="text-lg mb-5">{{user.bio}}</span>
