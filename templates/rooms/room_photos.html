@@ -1,0 +1,25 @@
+{% extends "base.html" %} 
+{% block page_name %}
+    {{ room.name }}'s photos
+{% endblock page_name %}
+{% block content %}
+    <div class="container mx-auto my-10 flex-col flex">
+
+        {%for photo in room.photos.all %}
+        <div class="mb-5 border p-6 border-gray-400 flex justify-between">
+            <div class="flex items-start">
+                <img src="{{photo.file.url}}" class="w-32 h-32">
+                <span class="ml-5 text-xl">{{photo.caption}}</span>
+            </div>
+            <div class="flex flex-col justify-around w-1/6">
+                <a href="{% url "rooms:edit-photo" room.pk photo.pk%}" class="btn-link mb-5 bg-green-500">edit</a>
+                <a href="{% url "rooms:delete-photo" room.pk photo.pk%}" class="btn-link bg-red-600">delete</a>
+            </div>
+        </div>
+        {%endfor%}
+        <div class="flex justify-center mt-5">
+            <a href="{% url "rooms:edit" room.pk %}" class="text-green-500 font-medium text-2xl">뒤로 돌아가기</a>
+        </div>
+    
+    </div>
+{% endblock content %}

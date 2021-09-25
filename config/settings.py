@@ -166,3 +166,7 @@ EMAIL_PORT = 587
 EMAIL_HOST_USER = os.environ.get("GMAIL_EMAIL")
 EMAIL_HOST_PASSWORD = os.environ.get("GMAIL_PASSWORD")
 EMAIL_FROM = EMAIL_HOST_USER
+
+
+# login url
+LOGIN_URL = "users:login"
