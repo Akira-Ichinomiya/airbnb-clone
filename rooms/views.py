@@ -1,6 +1,6 @@
 from django.utils import timezone
 from django.shortcuts import render
-from django.views.generic import ListView, DetailView, View, UpdateView
+from django.views.generic import ListView, DetailView, View, UpdateView, FormView
 from django.core.paginator import Paginator
 from django.http import Http404
 from django.contrib.auth.decorators import login_required
@@ -8,6 +8,7 @@ from django.shortcuts import redirect
 from django.urls import reverse
 from django.contrib import messages
 from django.contrib.messages.views import SuccessMessageMixin
+from django.views.generic.edit import FormView
 from users import mixins as user_mixins
 from . import models, forms
 
@@ -194,3 +195,30 @@ class EditPhotoView(user_mixins.LoggedInOnlyView, SuccessMessageMixin, UpdateVie
         room_pk = self.kwargs.get("room_pk")
         print(room_pk)
         return reverse("rooms:photos", kwargs={"pk": room_pk})
+
+
+class AddPhotoView(user_mixins.LoggedInOnlyView, FormView):
+
+    template_name = "rooms/photo_create.html"
+    form_class = forms.CreatePhotoForm
+
+    def form_valid(self, form):
+        pk = self.kwargs.get("pk")
+        messages.success(self.request, "사진이 추가되었습니다.")
+        form.save(pk)
+        return redirect(reverse("rooms:photos", kwargs={"pk": pk}))
+
+
+class CreateRoomView(user_mixins.LoggedInOnlyView, FormView):
+
+    form_class = forms.CreateRoomForm
+    template_name = "rooms/room_create.html"
+
+    def form_valid(self, form):
+
+        room = form.save()
+        room.host = self.request.user
+        room.save()
+        form.save_m2m()
+        messages.success(self.request, "방을 생성하였습니다.")
+        return redirect(reverse("rooms:detail", kwargs={"pk": room.pk}))
