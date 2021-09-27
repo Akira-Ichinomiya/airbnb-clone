@@ -1,7 +1,9 @@
 from django.db import models
+from django.utils import timezone
 from django_countries.fields import CountryField
 from django.urls import reverse
 from core import models as core_models
+from cal import Calendar
 
 
 class AbstractItem(core_models.TimeStampedModel):
@@ -129,3 +131,17 @@ class Room(core_models.TimeStampedModel):
             return photos
         except:
             return None
+
+    def get_calendar(self):
+        now = timezone.now()
+        year = now.year
+        month = now.month
+        current_month = Calendar(year, month)
+        if month == 12:
+            month = 1
+            year += 1
+        else:
+            month += 1
+        next_month = Calendar(year, month)
+
+        return [current_month, next_month]
