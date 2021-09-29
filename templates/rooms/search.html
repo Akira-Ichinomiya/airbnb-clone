@@ -1,24 +1,32 @@
 {% extends "base.html" %} 
 {% block page_name %}
-    <h1>Search</h1>
+    Search
 {% endblock page_name %}
-{% block search-bar %}
-<form method="get" action="{% url "rooms:search" %}">
-  <label for="city">City</label>
-  <input placeholder="Search by City" id="city" name="city">
-</form>
-{% endblock search-bar %}
 {% block content %}
-    
-  <form action="{% url "rooms:search" %}">
-    {{form.as_p}}
-    <button>Search</button>
-  </form>
+    <div class="flex w-full items-center justify-center">
+      {% if rooms %}
+      <h3 class="font-medium p-2 mt-5">Results</h3>
+      {% endif %}
+    </div>
 
-    <h3>Results</h3>
+    <form method="get" action="{% url "rooms:search" %}">
+      {{form.as_p}}
+      <div class="w-20 h-10 bg-green-300 flex justify-center items-center rounded ">
+        <button>Search</button>
+      </div>
+    </form>
 
-    {% for room in rooms %}
-      <h3>{{room.name}}</h3>
-    {% endfor %}
+    <div class="container flex justify-center items-center">
+      {% for room in rooms %}
+      <a href="{{room.get_absolute_url}}" class="mt-5 hover:bg-green-100"><h3>{{room.name}}</h3></a>
+      {% endfor %}  
+    </div>
+
+
+    {% if not rooms%}
+    <div class="flex justify-center mt-10">
+      <h3 class="font-bold justify-content">No results found</h3>
+    </div>
+    {% endif %}
     
 {% endblock content %}

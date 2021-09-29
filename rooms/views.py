@@ -1,4 +1,5 @@
 from django.utils import timezone
+from django.forms.fields import NullBooleanField
 from django.shortcuts import render
 from django.views.generic import ListView, DetailView, View, UpdateView, FormView
 from django.core.paginator import Paginator
@@ -90,33 +91,33 @@ class SearchView(View):
 
     def get(self, request):
 
-        qs = None
-        country = request.GET.get("country")
+        city = request.GET.get("city")
+        print("city=", city)
+        if city:
 
-        if country:
             form = forms.SearchForm(request.GET)
+            print(form.is_valid())
+
             if form.is_valid():
                 city = form.cleaned_data.get("city")
-                country = form.cleaned_data.get("country")
-                price = form.cleaned_data.get("price")
+                # country = form.cleaned_data.get("country")
                 room_type = form.cleaned_data.get("room_type")
+                price = form.cleaned_data.get("price")
                 guests = form.cleaned_data.get("guests")
-                beds = form.cleaned_data.get("beds")
                 bedrooms = form.cleaned_data.get("bedrooms")
+                beds = form.cleaned_data.get("beds")
                 baths = form.cleaned_data.get("baths")
                 instant_book = form.cleaned_data.get("instant_book")
                 superhost = form.cleaned_data.get("superhost")
                 amenities = form.cleaned_data.get("amenities")
                 facilities = form.cleaned_data.get("facilities")
 
-                print(form.cleaned_data)
-
                 filter_args = {}
 
                 if city != "Anywhere":
                     filter_args["city__startswith"] = city
 
-                filter_args["country"] = country
+                # filter_args["country"] = country
 
                 if room_type is not None:
                     filter_args["room_type"] = room_type
@@ -142,13 +143,13 @@ class SearchView(View):
                 if superhost is True:
                     filter_args["host__superhost"] = True
 
-                qs = models.Room.objects.filter(**filter_args).order_by("created")
-
                 for amenity in amenities:
-                    qs = qs.filter(amenities=amenity)
+                    filter_args["amenities"] = amenity
 
                 for facility in facilities:
-                    qs = qs.filter(facilities=facility)
+                    filter_args["facilities"] = facility
+
+                qs = models.Room.objects.filter(**filter_args).order_by("-created")
 
                 paginator = Paginator(qs, 10, orphans=5)
 
@@ -156,14 +157,15 @@ class SearchView(View):
 
                 rooms = paginator.get_page(page)
 
+                return render(
+                    request, "rooms/search.html", {"form": form, "rooms": rooms}
+                )
+
         else:
+            print("else가 작동")
             form = forms.SearchForm()
 
-        return render(
-            request,
-            "rooms/search.html",
-            {"form": form, "rooms": rooms},
-        )
+        return render(request, "rooms/search.html", {"form": form})
 
 
 @login_required
