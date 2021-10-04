@@ -42,7 +42,7 @@ class Reservation(core_models.TimeStampedModel):
     room = models.ForeignKey(
         "rooms.Room", related_name="reservations", on_delete=models.CASCADE
     )
-    objects = managers.CustomReservationManager
+    objects = managers.CustomReservationManager()
 
     def __str__(self):
         return f"{self.room} - {self.check_in}"
@@ -60,7 +60,7 @@ class Reservation(core_models.TimeStampedModel):
     is_finished.boolean = True
 
     def save(self, *args, **kwargs):
-        if True:  # self.pk is None:
+        if self.pk is None:
             start = self.check_in
             end = self.check_out
             difference = end - start
@@ -68,11 +68,12 @@ class Reservation(core_models.TimeStampedModel):
                 day__range=(start, end)
             ).exists()
             if not existing_booked_day:
-                super().save(*args, **kwargs)  #
+                super().save(*args, **kwargs)
                 for i in range(difference.days + 1):
                     day = start + datetime.timedelta(days=i)
                     BookedDay.objects.create(
                         day=day, reservation=self
                     )  # 이 작업을 수행하기 위해 위에서 미리 room을 save하여 만듦
+                return
 
         return super().save(*args, **kwargs)
