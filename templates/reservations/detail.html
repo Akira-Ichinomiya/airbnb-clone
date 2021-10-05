@@ -27,12 +27,23 @@
         </div>
     
         <div class="py-10 px-3">
-            {% if reservation.status == 'pending'%}
-            <a href="{% url "reservations:edit" reservation.pk 'confirm' %}" class="btn-link block px-3 py-3 mb-2">예약하기</a>
-            {% endif%}
-            {% if reservation.room.host != user %}
-            <a href="{% url "reservations:edit" reservation.pk 'cancel' %}" class="btn-link block px-3 py-3">예약 취소</a>
-            {%endif%}
+        {% if reservation.status != 'cancelled' %}
+            {% if reservation.status == 'confirmed' and reservation.is_finished %}
+                <span class="font-medium text-2xl text-center w-full block mb-5">다녀오신 곳은 어떠셨나요? 리뷰를 작성해 주세요!</span>
+                <form action="{% url "reviews:create" reservation.room.pk %}" method="POST" class="w-1/2 mx-auto">
+                    {% csrf_token %}
+                    {{form}}
+                    <button class="btn-link mt-5">리뷰 등록</button>
+                </form>
+            {% else %}
+                    {% if reservation.status == 'pending'%}
+                    <a href="{% url "reservations:edit" reservation.pk 'confirm' %}" class="btn-link block px-3 py-3 mb-2">예약하기</a>
+                    {% if reservation.room.host != user %}
+                    <a href="{% url "reservations:edit" reservation.pk 'cancel' %}" class="btn-link block px-3 py-3">예약 취소</a>
+                    {%endif%}
+                    {% endif%}
+            {% endif %}
+        {% endif %}
         </div>
     </div>
     
