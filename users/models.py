@@ -6,6 +6,7 @@ from django.conf import settings
 from django.utils.html import strip_tags
 from django.template.loader import render_to_string
 from django.urls import reverse
+from django.utils.translation import gettext_lazy as _
 
 # Create your models here.
 class User(AbstractUser):
@@ -27,14 +28,14 @@ class User(AbstractUser):
     LOGIN_KAKAO = "kakao"
 
     GENDER_CHOICES = (
-        (GENDER_MALE, "male"),
-        (GENDER_FEMALE, "female"),
-        (GENDER_OTHER, "other"),
+        (GENDER_MALE, _("male")),
+        (GENDER_FEMALE, _("female")),
+        (GENDER_OTHER, _("other")),
     )
 
     LANGUAGE_CHOICES = (
-        (LANGUAGE_ENGLISH, "english"),
-        (LANGUAGE_KOREAN, "korean"),
+        (LANGUAGE_ENGLISH, _("english")),
+        (LANGUAGE_KOREAN, _("korean")),
     )
 
     CURRENCY_CHOICES = (
@@ -50,10 +51,14 @@ class User(AbstractUser):
 
     avatar = models.ImageField(blank=True, upload_to="avatars")
     gender = models.CharField(choices=GENDER_CHOICES, max_length=10, blank=True)
-    bio = models.TextField(default="", blank=True)
+    bio = models.TextField(_("bio"), default="", blank=True)
     birthdate = models.DateField(null=True, blank=True)
     language = models.CharField(
-        choices=LANGUAGE_CHOICES, max_length=2, blank=True, default=LANGUAGE_ENGLISH
+        _("language"),
+        choices=LANGUAGE_CHOICES,
+        max_length=2,
+        blank=True,
+        default=LANGUAGE_ENGLISH,
     )
     currency = models.CharField(
         choices=CURRENCY_CHOICES, max_length=3, blank=True, default=CURRENCY_USD

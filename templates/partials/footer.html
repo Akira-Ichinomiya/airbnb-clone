@@ -1,3 +1,13 @@
+{% load i18n %}
 <footer class="container mx-auto text-center py-20 border-t font-medium text-gray-500">
-    &copy; Airbnb, Inc. All rights reserved.
+    <div class="flex flex-col">
+        &copy; Airbnb, Inc. {% trans "All rights reserved" %}.
+    </div>
+    <div class="flex mt-10">
+        {% get_current_language as LANGUAGE_CODE %}
+        <select id="js-lang" class="w-1/12 h-10">
+            <option value="en" {% if LANGUAGE_CODE == 'en'%}selected{% endif %}>English</option>
+            <option value="kr" {% if LANGUAGE_CODE == 'ko'%}selected{% endif %}>Korean</option>
+        </select>
+    </div>
 </footer>
