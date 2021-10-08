@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-10-06 17:08+0900\n"
+"POT-Creation-Date: 2021-10-08 13:14+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -26,10 +26,22 @@ msgstr "도시로 검색"
 msgid "All rights reserved"
 msgstr "모든 권리 보호"
 
+#: templates/partials/nav.html:18
+msgid "Favs"
+msgstr "즐겨찾기"
+
 #: templates/rooms/home.html:25
 #, python-format
 msgid "Page %(current_page)s of %(total_pages)s"
 msgstr "페이지 %(current_page)s 중 %(total_pages)s"
+
+#: templates/rooms/room_detail.html:33
+msgid "Remove from Favorites"
+msgstr "즐겨찾기 목록에서 제거"
+
+#: templates/rooms/room_detail.html:35
+msgid "Save to Favorites"
+msgstr "즐겨찾기에 추가"
 
 #: users/models.py:31
 msgid "male"

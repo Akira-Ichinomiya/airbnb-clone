@@ -1,3 +1,4 @@
+{% load i18n %}
 <ul class="flex items-center text-sm font-medium h-full">
     {% if user.is_authenticated %}
         <li class="nav_link">
@@ -15,6 +16,7 @@
         {% endif %}
 
         <li class="nav_link"><a href="{{user.get_absolute_url}}">Profile</a></li>
+        <li class="nav_link"><a href="{% url "lists:see-favs" %}">{% trans "Favs" %}{% if user.list %}({{user.list.rooms.count}}){% endif %}</a></li>
         <li class="nav_link"><a href="{% url "users:logout" %}">Log out</a></li>
     {% else %}
         <li class="nav_link"><a href="{% url "users:login" %}">Log in</a></li>
