@@ -23,7 +23,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = "django-insecure-228wj%9c-%@(-fx14v9nzon(k4)z&!15ef4ssc*r6s9m+%l$wo"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = bool(os.environ.get("DEBUG"))
+DEBUG = True  # bool(os.environ.get("DEBUG"))
 
 ALLOWED_HOSTS = []
 
@@ -98,24 +98,35 @@ WSGI_APPLICATION = "config.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-if DEBUG:
-    DATABASES = {
-        "default": {
-            "ENGINE": "django.db.backends.sqlite3",
-            "NAME": BASE_DIR / "db.sqlite3",
-        }
+# if DEBUG:
+#     DATABASES = {
+#         "default": {
+#             "ENGINE": "django.db.backends.sqlite3",
+#             "NAME": BASE_DIR / "db.sqlite3",
+#         }
+#     }
+# else:
+#     DATABASES = {
+#         "default": {
+#             "ENGINE": "django.db.backends.postgresql",
+#             "NAME": os.environ.get("RDS_NAME"),
+#             "HOST": os.environ.get("RDS_HOST"),
+#             "USER": os.environ.get("RDS_USER"),
+#             "PASSWORD": os.environ.get("RDS_PASSWORD"),
+#             "PORT": "5432",
+#         }
+#     }
+
+DATABASES = {
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": os.environ.get("RDS_NAME"),
+        "HOST": os.environ.get("RDS_HOST"),
+        "USER": os.environ.get("RDS_USER"),
+        "PASSWORD": os.environ.get("RDS_PASSWORD"),
+        "PORT": "5432",
     }
-else:
-    DATABASES = {
-        "default": {
-            "ENGINE": "django.db.backends.postgresql",
-            "NAME": os.environ.get("RDS_NAME"),
-            "HOST": os.environ.get("RDS_HOST"),
-            "USER": os.environ.get("RDS_USER"),
-            "PASSWORD": os.environ.get("RDS_PASSWORD"),
-            "PORT": "5432",
-        }
-    }
+}
 
 
 # Password validation
