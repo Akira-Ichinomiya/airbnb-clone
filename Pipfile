@@ -12,6 +12,7 @@ django-dotenv = "*"
 requests = "*"
 django-debug-toolbar = "*"
 awsebcli = "*"
+pipenv-to-requirements = "*"
 
 [dev-packages]
 flake8 = "*"
