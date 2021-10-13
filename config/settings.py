@@ -58,7 +58,7 @@ DEBUG_APPS = [
     "debug_toolbar",
 ]
 
-INSTALLED_APPS = DJANGO_APPS + PROJECT_APPS + THIRD_PARTY_APPS + DEBUG_APPS  # 모든 앱들
+INSTALLED_APPS = DJANGO_APPS + PROJECT_APPS + THIRD_PARTY_APPS  # + DEBUG_APPS  모든 앱들
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
