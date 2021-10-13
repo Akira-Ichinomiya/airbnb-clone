@@ -10,7 +10,9 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 import os
+import sentry_sdk
 from pathlib import Path
+from sentry_sdk.integrations.django import DjangoIntegration
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,10 +22,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get("DJANGO_SECRET")
+SECRET_KEY = os.environ.get("DJANGO_SECRET", "(W&!x9d8&P.pMh#EPsp3gru~JPG6<&&L.r;m\N)^2XUhs9@?")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True  # bool(os.environ.get("DEBUG"))
+DEBUG = bool(os.environ.get("DEBUG"))
 
 ALLOWED_HOSTS = [".elasticbeanstalk.com"]
 
@@ -98,35 +100,35 @@ WSGI_APPLICATION = "config.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-# if DEBUG:
-#     DATABASES = {
-#         "default": {
-#             "ENGINE": "django.db.backends.sqlite3",
-#             "NAME": BASE_DIR / "db.sqlite3",
-#         }
-#     }
-# else:
-#     DATABASES = {
-#         "default": {
-#             "ENGINE": "django.db.backends.postgresql",
-#             "NAME": os.environ.get("RDS_NAME"),
-#             "HOST": os.environ.get("RDS_HOST"),
-#             "USER": os.environ.get("RDS_USER"),
-#             "PASSWORD": os.environ.get("RDS_PASSWORD"),
-#             "PORT": "5432",
-#         }
-#     }
-
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": os.environ.get("RDS_NAME"),
-        "HOST": os.environ.get("RDS_HOST"),
-        "USER": os.environ.get("RDS_USER"),
-        "PASSWORD": os.environ.get("RDS_PASSWORD"),
-        "PORT": "5432",
+if DEBUG:
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": BASE_DIR / "db.sqlite3",
+        }
     }
-}
+else:
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.postgresql",
+            "NAME": os.environ.get("RDS_NAME"),
+            "HOST": os.environ.get("RDS_HOST"),
+            "USER": os.environ.get("RDS_USER"),
+            "PASSWORD": os.environ.get("RDS_PASSWORD"),
+            "PORT": "5432",
+        }
+    }
+
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "django.db.backends.postgresql",
+#         "NAME": os.environ.get("RDS_NAME"),
+#         "HOST": os.environ.get("RDS_HOST"),
+#         "USER": os.environ.get("RDS_USER"),
+#         "PASSWORD": os.environ.get("RDS_PASSWORD"),
+#         "PORT": "5432",
+#     }
+# }
 
 
 # Password validation
@@ -202,3 +204,22 @@ LOCALE_PATHS = [os.path.join(BASE_DIR, "locale")]
 # Language Cookie
 
 LANGUAGE_COOKIE_NAME = "django_language"
+
+# Sentry
+
+if not DEBUG:
+    sentry_sdk.init(
+    dsn=os.environ.get("SENTRY_URL"),
+    integrations=[DjangoIntegration()],
+
+    # Set traces_sample_rate to 1.0 to capture 100%
+    # of transactions for performance monitoring.
+    # We recommend adjusting this value in production.
+    traces_sample_rate=1.0,
+
+    # If you wish to associate users to errors (assuming you are using
+    # django.contrib.auth) you may enable sending PII data.
+    send_default_pii=True
+)
+
+
