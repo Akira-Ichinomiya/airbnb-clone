@@ -54,9 +54,9 @@ PROJECT_APPS = [  # 우리가 만든 앱들
     "conversations.apps.ConversationsConfig",
 ]
 
-DEBUG_APPS = [
-    "debug_toolbar",
-]
+# DEBUG_APPS = [
+#     "debug_toolbar",
+# ]
 
 INSTALLED_APPS = DJANGO_APPS + PROJECT_APPS + THIRD_PARTY_APPS  # + DEBUG_APPS  모든 앱들
 
