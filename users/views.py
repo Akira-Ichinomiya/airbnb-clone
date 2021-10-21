@@ -76,7 +76,8 @@ def complete_verification(request, key):
 
 def github_login(request):
     client_id = os.environ.get("GH_ID")
-    redirect_uri = "http://127.0.0.1:8000/users/login/github/callback"
+    SITE_URL = "http://airbnbclone-env.eba-mpcrw5sd.ap-northeast-2.elasticbeanstalk.com"
+    redirect_uri = f"{SITE_URL}/users/login/github/callback"
     return redirect(
         f"https://github.com/login/oauth/authorize?client_id={client_id}&redirect_uri={redirect_uri}&scope=read:user"
     )
@@ -146,7 +147,8 @@ def github_callback(request):
 
 def kakao_login(request):
     KAKAO_ID = os.environ.get("KAKAO_ID")
-    redirect_uri = "http://127.0.0.1:8000/users/login/kakao/callback"
+    SITE_URL = "http://airbnbclone-env.eba-mpcrw5sd.ap-northeast-2.elasticbeanstalk.com"
+    redirect_uri = f"{SITE_URL}/users/login/github/callback"
     return redirect(
         f"https://kauth.kakao.com/oauth/authorize?client_id={KAKAO_ID}&redirect_uri={redirect_uri}&response_type=code"
     )
@@ -160,7 +162,10 @@ def kakao_callback(request):
     try:
         code = request.GET.get("code", None)
         client_id = os.environ.get("KAKAO_ID")
-        redirect_uri = "http://127.0.0.1:8000/users/login/kakao/callback"
+        SITE_URL = (
+            "http://airbnbclone-env.eba-mpcrw5sd.ap-northeast-2.elasticbeanstalk.com"
+        )
+        redirect_uri = f"{SITE_URL}/users/login/github/callback"
         token_request = requests.get(
             f"https://kauth.kakao.com/oauth/token?grant_type=authorization_code&client_id={client_id}&redirect_uri={redirect_uri}&code={code}"
         )
